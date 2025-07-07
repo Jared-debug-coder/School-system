@@ -1,7 +1,10 @@
 
 import React from 'react';
-import { Users, Calendar, Book, FileText } from 'lucide-react';
+import { Users, Calendar, Book, FileText, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,13 +12,50 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const { toast } = useToast();
 
-  const navigation = [
-    { name: 'Dashboard', href: '/', icon: Calendar },
-    { name: 'Students', href: '/students', icon: Users },
-    { name: 'Finance', href: '/finance', icon: FileText },
-    { name: 'Reports', href: '/reports', icon: Book },
-  ];
+  const getNavigationForRole = () => {
+    const baseNavigation = [
+      { name: 'Dashboard', href: '/', icon: Calendar },
+    ];
+
+    if (user?.role === 'admin') {
+      return [
+        ...baseNavigation,
+        { name: 'Students', href: '/students', icon: Users },
+        { name: 'Finance', href: '/finance', icon: FileText },
+        { name: 'Reports', href: '/reports', icon: Book },
+      ];
+    }
+
+    if (user?.role === 'accountant') {
+      return [
+        ...baseNavigation,
+        { name: 'Students', href: '/students', icon: Users },
+        { name: 'Finance', href: '/finance', icon: FileText },
+        { name: 'Reports', href: '/reports', icon: Book },
+      ];
+    }
+
+    if (user?.role === 'parent') {
+      return [
+        { name: 'Dashboard', href: '/parent', icon: Calendar },
+      ];
+    }
+
+    return baseNavigation;
+  };
+
+  const navigation = getNavigationForRole();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -58,12 +98,26 @@ const Layout = ({ children }: LayoutProps) => {
 
           {/* User info */}
           <div className="border-t border-gray-200 p-4">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-teal-600 to-blue-600"></div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">Admin User</p>
-                <p className="text-xs text-gray-500">Nairobi Academy</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center min-w-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-teal-600 to-blue-600 flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user?.name.charAt(0)}
+                  </span>
+                </div>
+                <div className="ml-3 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
+                  <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                </div>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="p-1 h-8 w-8"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>

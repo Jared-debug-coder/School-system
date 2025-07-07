@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { studentsData } from '@/data/studentsData';
 
 const Students = () => {
   const [open, setOpen] = useState(false);
@@ -21,38 +22,7 @@ const Students = () => {
   });
   const { toast } = useToast();
 
-  const students = [
-    {
-      id: 1,
-      name: 'John Kamau',
-      class: 'Form 4A',
-      admissionNumber: 'NA2024001',
-      balance: 'KES 5,000',
-      status: 'Active',
-      guardian: 'Peter Kamau',
-      phone: '+254712345678',
-    },
-    {
-      id: 2,
-      name: 'Mary Wanjiku',
-      class: 'Form 2B',
-      admissionNumber: 'NA2024002',
-      balance: 'KES 0',
-      status: 'Active',
-      guardian: 'Jane Wanjiku',
-      phone: '+254723456789',
-    },
-    {
-      id: 3,
-      name: 'Peter Ochieng',
-      class: 'Form 3C',
-      admissionNumber: 'NA2024003',
-      balance: 'KES 15,000',
-      status: 'Active',
-      guardian: 'Robert Ochieng',
-      phone: '+254734567890',
-    },
-  ];
+  const students = studentsData;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
