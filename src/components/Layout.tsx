@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Users, Calendar, Book, FileText, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,13 +15,9 @@ const Layout = ({ children }: LayoutProps) => {
   const { toast } = useToast();
 
   const getNavigationForRole = () => {
-    const baseNavigation = [
-      { name: 'Dashboard', href: '/', icon: Calendar },
-    ];
-
     if (user?.role === 'admin') {
       return [
-        ...baseNavigation,
+        { name: 'Dashboard', href: '/', icon: Calendar },
         { name: 'Students', href: '/students', icon: Users },
         { name: 'Finance', href: '/finance', icon: FileText },
         { name: 'Reports', href: '/reports', icon: Book },
@@ -31,7 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
 
     if (user?.role === 'accountant') {
       return [
-        ...baseNavigation,
+        { name: 'Finance Dashboard', href: '/accountant', icon: Calendar },
         { name: 'Students', href: '/students', icon: Users },
         { name: 'Finance', href: '/finance', icon: FileText },
         { name: 'Reports', href: '/reports', icon: Book },
@@ -44,7 +39,9 @@ const Layout = ({ children }: LayoutProps) => {
       ];
     }
 
-    return baseNavigation;
+    return [
+      { name: 'Dashboard', href: '/', icon: Calendar },
+    ];
   };
 
   const navigation = getNavigationForRole();

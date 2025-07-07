@@ -10,12 +10,13 @@ export interface User {
   role: UserRole;
   avatar?: string;
   schoolName?: string;
-  children?: string[]; // For parents - student IDs
+  children?: string[]; // For parents - student admission numbers
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
+  parentLogin: (admissionNumber: string, parentPhone: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -38,28 +39,39 @@ const mockUsers: User[] = [
     role: 'accountant',
     schoolName: 'Nairobi Academy',
   },
-  {
+];
+
+// Mock parent-student relationships (admission number -> parent info)
+const parentStudentMap: Record<string, User> = {
+  'NA2024001': {
     id: '3',
     name: 'Peter Kamau',
     email: 'peter.kamau@gmail.com',
     role: 'parent',
     children: ['NA2024001', 'NA2024015'],
   },
-  {
+  'NA2024002': {
     id: '4',
     name: 'Jane Wanjiku',
     email: 'jane.wanjiku@gmail.com',
     role: 'parent',
     children: ['NA2024002'],
   },
-  {
+  'NA2024003': {
     id: '5',
     name: 'Robert Ochieng',
     email: 'robert.ochieng@gmail.com',
     role: 'parent',
     children: ['NA2024003'],
   },
-];
+  'NA2024015': {
+    id: '3',
+    name: 'Peter Kamau',
+    email: 'peter.kamau@gmail.com', 
+    role: 'parent',
+    children: ['NA2024001', 'NA2024015'],
+  },
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -93,13 +105,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
+  const parentLogin = async (admissionNumber: string, parentPhone: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Find parent by admission number (simplified - in real app, you'd verify phone number)
+    const parentUser = parentStudentMap[admissionNumber];
+    
+    if (parentUser && parentPhone.length >= 10) {
+      setUser(parentUser);
+      localStorage.setItem('shulePro_user', JSON.stringify(parentUser));
+      setIsLoading(false);
+      return true;
+    }
+    
+    setIsLoading(false);
+    return false;
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('shulePro_user');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, parentLogin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

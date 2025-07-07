@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -9,9 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { studentsData } from '@/data/studentsData';
+import StudentProfile from '@/components/StudentProfile';
 
 const Students = () => {
   const [open, setOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     admissionNumber: '',
@@ -49,11 +51,9 @@ const Students = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleViewDetails = (studentName: string) => {
-    toast({
-      title: "Student Details",
-      description: `Opening detailed profile for ${studentName}`,
-    });
+  const handleViewDetails = (student: any) => {
+    setSelectedStudent(student);
+    setProfileOpen(true);
   };
 
   return (
@@ -234,9 +234,9 @@ const Students = () => {
                         variant="ghost" 
                         size="sm" 
                         className="text-teal-600 hover:text-teal-700"
-                        onClick={() => handleViewDetails(student.name)}
+                        onClick={() => handleViewDetails(student)}
                       >
-                        View Details
+                        View Profile
                       </Button>
                     </td>
                   </tr>
@@ -245,6 +245,13 @@ const Students = () => {
             </table>
           </div>
         </div>
+
+        {/* Student Profile Dialog */}
+        <StudentProfile 
+          student={selectedStudent} 
+          open={profileOpen} 
+          onOpenChange={setProfileOpen} 
+        />
       </div>
     </Layout>
   );

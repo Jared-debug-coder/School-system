@@ -3,10 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Index from "./pages/Index";
+import AdminDashboard from "./pages/AdminDashboard";
+import AccountantDashboard from "./pages/AccountantDashboard";
 import Students from "./pages/Students";
 import Finance from "./pages/Finance";
 import Reports from "./pages/Reports";
@@ -26,8 +27,16 @@ const App = () => (
             <Route 
               path="/" 
               element={
-                <ProtectedRoute allowedRoles={['admin', 'accountant']}>
-                  <Index />
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/accountant" 
+              element={
+                <ProtectedRoute allowedRoles={['accountant']}>
+                  <AccountantDashboard />
                 </ProtectedRoute>
               } 
             />
