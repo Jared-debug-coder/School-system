@@ -3,8 +3,11 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { FileText } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Reports = () => {
+  const { toast } = useToast();
+
   const reports = [
     {
       name: 'Financial Summary Report',
@@ -32,6 +35,31 @@ const Reports = () => {
     },
   ];
 
+  const handleGenerateReport = (reportName: string) => {
+    toast({
+      title: "Report Generated",
+      description: `${reportName} has been generated successfully. Check your downloads folder.`,
+    });
+    
+    // Simulate report generation
+    console.log(`Generating report: ${reportName}`);
+    
+    // In a real application, this would trigger a download or email
+    setTimeout(() => {
+      toast({
+        title: "Download Ready",
+        description: `${reportName} is ready for download as PDF.`,
+      });
+    }, 2000);
+  };
+
+  const handleGenerateNewReport = () => {
+    toast({
+      title: "Custom Report Builder",
+      description: "Opening custom report builder interface...",
+    });
+  };
+
   return (
     <Layout>
       <div className="space-y-8">
@@ -41,7 +69,7 @@ const Reports = () => {
             <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
             <p className="mt-2 text-gray-600">Generate and view financial and academic reports</p>
           </div>
-          <Button className="bg-teal-600 hover:bg-teal-700">
+          <Button className="bg-teal-600 hover:bg-teal-700" onClick={handleGenerateNewReport}>
             <FileText className="h-4 w-4 mr-2" />
             Generate Report
           </Button>
@@ -71,7 +99,11 @@ const Reports = () => {
                   <div className="text-sm text-gray-500">
                     Last generated: {report.lastGenerated}
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleGenerateReport(report.name)}
+                  >
                     Generate
                   </Button>
                 </div>
