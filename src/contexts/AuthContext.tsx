@@ -41,37 +41,44 @@ const mockUsers: User[] = [
   },
 ];
 
-// Mock parent-student relationships (admission number -> parent info)
-const parentStudentMap: Record<string, User> = {
-  'NA2024001': {
+// Mock parent users with their children's admission numbers
+const parentUsers: User[] = [
+  {
     id: '3',
     name: 'Peter Kamau',
     email: 'peter.kamau@gmail.com',
     role: 'parent',
     children: ['NA2024001', 'NA2024015'],
   },
-  'NA2024002': {
+  {
     id: '4',
     name: 'Jane Wanjiku',
     email: 'jane.wanjiku@gmail.com',
     role: 'parent',
     children: ['NA2024002'],
   },
-  'NA2024003': {
+  {
     id: '5',
     name: 'Robert Ochieng',
     email: 'robert.ochieng@gmail.com',
     role: 'parent',
     children: ['NA2024003'],
   },
-  'NA2024015': {
-    id: '3',
-    name: 'Peter Kamau',
-    email: 'peter.kamau@gmail.com', 
+  {
+    id: '6',
+    name: 'Jane Mwangi',
+    email: 'jane.mwangi@gmail.com',
     role: 'parent',
-    children: ['NA2024001', 'NA2024015'],
+    children: ['NA2024004'],
   },
-};
+  {
+    id: '7',
+    name: 'Paul Kiprotich',
+    email: 'paul.kiprotich@gmail.com',
+    role: 'parent',
+    children: ['NA2024005'],
+  },
+];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -111,10 +118,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Find parent by admission number (simplified - in real app, you'd verify phone number)
-    const parentUser = parentStudentMap[admissionNumber];
+    // Find parent by checking if they have a child with this admission number
+    const parentUser = parentUsers.find(parent => 
+      parent.children && parent.children.includes(admissionNumber)
+    );
     
-    if (parentUser && parentPhone.length >= 10) {
+    // Simple phone validation (must be at least 10 digits)
+    const phoneValid = parentPhone.replace(/\D/g, '').length >= 10;
+    
+    if (parentUser && phoneValid) {
       setUser(parentUser);
       localStorage.setItem('shulePro_user', JSON.stringify(parentUser));
       setIsLoading(false);
