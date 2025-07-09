@@ -5,7 +5,7 @@ import { writeFileSync } from "fs";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/School-System/' : '/',
+  base: mode === 'production' ? '/School-system/' : '/',
   server: {
     host: "::",
     port: 8080,
