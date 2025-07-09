@@ -1,70 +1,102 @@
-# ShulePro - Kenyan School Finance Management System
+# School Management System
 
-ShulePro is a comprehensive school finance management system designed specifically for Kenyan educational institutions. The platform provides seamless fee collection, student management, and financial reporting capabilities tailored to the unique needs of Kenyan schools.
+A comprehensive school management system built for efficient administration of educational institutions. This platform streamlines student enrollment, fee management, and administrative tasks with an intuitive interface designed for schools.
 
 ## Features
 
-- **Multi-role Authentication**: Separate dashboards for administrators, accountants, and parents
+### Core Functionality
 - **Student Management**: Complete student enrollment and profile management
-- **Fee Management**: Automated invoice generation and payment tracking
-- **M-Pesa Integration**: Support for Kenya's most popular mobile payment platform
-- **Financial Reporting**: Comprehensive reports and analytics
-- **Parent Portal**: Parents can view their children's fee status and make payments
-- **Real-time Notifications**: Instant updates on payments and important school information
+- **Fee Collection**: Automated invoice generation and payment tracking
+- **Multi-role Dashboard**: Separate interfaces for administrators, accountants, teachers, and parents
+- **Payment Integration**: Support for mobile payment platforms including M-Pesa
+- **Financial Reporting**: Comprehensive reports and analytics for better decision making
+- **Parent Portal**: Secure access for parents to view student progress and make payments
+
+### Advanced Features
+- **Academic Management**: Grade tracking, report card generation, and academic analytics
+- **Attendance System**: Digital attendance tracking with automated notifications
+- **Communication Hub**: Integrated messaging system for school-wide communication
+- **Teacher Dashboard**: Tools for lesson planning, grade management, and student assessment
+- **Receipt Generation**: Automatic receipt generation for all transactions
+
+## Technology Stack
+
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite for fast development and optimized builds
+- **UI Framework**: Tailwind CSS with shadcn/ui components
+- **State Management**: React Context API with custom hooks
+- **PDF Generation**: jsPDF for receipts and reports
+- **Payment Processing**: M-Pesa integration for seamless transactions
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ and npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 18.0 or higher
+- npm or yarn package manager
 - Git for version control
 
 ### Installation
 
-```sh
-# Clone the repository
-git clone https://github.com/your-username/shulepro-kenyan-schools.git
+1. Clone the repository:
+```bash
+git clone https://github.com/Jared-debug-coder/School-System.git
+cd School-System
+```
 
-# Navigate to the project directory
-cd shulepro-kenyan-schools
-
-# Install dependencies
+2. Install dependencies:
+```bash
 npm install
+```
 
-# Start the development server
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-### Authentication
+4. Open your browser and navigate to `http://localhost:8080`
 
-The system supports three types of users:
+### Building for Production
 
-**School Staff**
-- Administrators: Full system access and management
-- Accountants: Financial management and reporting
+```bash
+npm run build
+```
 
-**Parents/Guardians**
-- Access via student admission number and registered phone number
-- View student reports, fee statements, and make payments
+The built files will be in the `dist` directory.
 
-## What technologies are used for this project?
+## User Roles
 
-This project is built with:
+### Administrator
+- Full system access and configuration
+- User management and role assignment
+- System-wide reporting and analytics
+- Fee structure management
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Accountant
+- Financial management and reporting
+- Payment processing and tracking
+- Invoice generation and management
+- Financial analytics and reports
 
-## How can I deploy this project?
+### Teacher
+- Student grade management
+- Attendance tracking
+- Report card generation
+- Class and subject management
 
-Simply open [Lovable](https://lovable.dev/projects/034d0dc0-912f-442a-945e-acba078ccd07) and click on Share -> Publish.
+### Parent/Guardian
+- Student progress monitoring
+- Fee payment and transaction history
+- Communication with school administration
+- Report card and certificate downloads
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
 
-Yes, you can!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License.
+
+## Support
+
+For support and inquiries, please contact the development team.
