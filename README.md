@@ -1,54 +1,51 @@
-# Welcome to your Lovable project
+# ShulePro - Kenyan School Finance Management System
 
-## Project info
+ShulePro is a comprehensive school finance management system designed specifically for Kenyan educational institutions. The platform provides seamless fee collection, student management, and financial reporting capabilities tailored to the unique needs of Kenyan schools.
 
-**URL**: https://lovable.dev/projects/034d0dc0-912f-442a-945e-acba078ccd07
+## Features
 
-## How can I edit this code?
+- **Multi-role Authentication**: Separate dashboards for administrators, accountants, and parents
+- **Student Management**: Complete student enrollment and profile management
+- **Fee Management**: Automated invoice generation and payment tracking
+- **M-Pesa Integration**: Support for Kenya's most popular mobile payment platform
+- **Financial Reporting**: Comprehensive reports and analytics
+- **Parent Portal**: Parents can view their children's fee status and make payments
+- **Real-time Notifications**: Instant updates on payments and important school information
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/034d0dc0-912f-442a-945e-acba078ccd07) and start prompting.
+- Node.js 18+ and npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Git for version control
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repository
+git clone https://github.com/your-username/shulepro-kenyan-schools.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to the project directory
+cd shulepro-kenyan-schools
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Authentication
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The system supports three types of users:
 
-**Use GitHub Codespaces**
+**School Staff**
+- Administrators: Full system access and management
+- Accountants: Financial management and reporting
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Parents/Guardians**
+- Access via student admission number and registered phone number
+- View student reports, fee statements, and make payments
 
 ## What technologies are used for this project?
 

@@ -1,38 +1,83 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { User, CreditCard, Calendar, FileText, Phone, Mail } from 'lucide-react';
+import { User, CreditCard, Calendar, FileText, Phone, Mail, ExternalLink, Download } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { studentsData } from '@/data/studentsData';
+import { generateReportCard } from '@/data/academicData';
+import { generateReportCardPDF } from '@/components/ReportCardPDF';
 
 const ParentDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const handlePayFees = (child: any) => {
+    // Redirect to M-Pesa payment or show payment options
+    toast({
+      title: "Payment Options",
+      description: `Redirecting to payment gateway for ${child.name}. Amount: KES ${child.balance.toLocaleString()}`,
+    });
+    
+    // Simulate opening payment gateway
+    setTimeout(() => {
+      window.open(`https://payments.nairobi-academy.ac.ke/pay?student=${child.id}&amount=${child.balance}`, '_blank');
+    }, 1000);
+  };
+  
+  const handleViewReport = (child: any) => {
+    toast({
+      title: "Generating Report Card",
+      description: `Generating ${child.name}'s latest report card...`,
+    });
+    
+    // Generate real report card using student data
+    setTimeout(() => {
+      const reportData = generateReportCard(child.admissionNumber);
+      
+      if (reportData) {
+        generateReportCardPDF(reportData);
+        toast({
+          title: "Download Complete",
+          description: `${child.name}'s report card has been downloaded successfully.`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Could not generate report card. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }, 1500);
+  };
 
-  // Mock data for parent's children
-  const children = [
-    {
-      id: 'NA2024001',
-      name: 'John Kamau Jr.',
-      class: 'Form 4A',
-      balance: 5000,
-      lastPayment: '2024-12-15',
-      nextFee: '2025-01-15',
-      performance: 'Good',
-      attendance: '95%',
-    },
-    {
-      id: 'NA2024015',
-      name: 'Mary Kamau',
-      class: 'Form 2B',
-      balance: 0,
-      lastPayment: '2024-12-20',
-      nextFee: '2025-01-15',
-      performance: 'Excellent',
-      attendance: '98%',
-    },
-  ];
+  // Get parent's children based on logged in user
+  const getParentChildren = () => {
+    if (!user?.children) return [];
+    
+    return user.children.map(admissionNumber => {
+      const student = studentsData.find(s => s.admissionNumber === admissionNumber);
+      if (!student) return null;
+      
+      const balance = parseFloat(student.balance.replace('KES ', '').replace(',', '')) || 0;
+      
+      return {
+        admissionNumber: student.admissionNumber,
+        name: student.name,
+        class: student.class,
+        balance: balance,
+        lastPayment: '2024-12-15',
+        nextFee: '2025-01-15',
+        performance: balance === 0 ? 'Excellent' : balance < 10000 ? 'Good' : 'Average',
+        attendance: balance === 0 ? '98%' : '95%',
+      };
+    }).filter(Boolean);
+  };
+  
+  const children = getParentChildren();
 
   const upcomingEvents = [
     { date: '2025-01-10', event: 'Parent-Teacher Conference', time: '2:00 PM' },
@@ -60,13 +105,13 @@ const ParentDashboard = () => {
         {/* Children Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {children.map((child) => (
-            <Card key={child.id}>
+            <Card key={child.admissionNumber}>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <User className="h-5 w-5 text-teal-600" />
                   <span>{child.name}</span>
                 </CardTitle>
-                <CardDescription>{child.id} - {child.class}</CardDescription>
+                <CardDescription>{child.admissionNumber} - {child.class}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -96,11 +141,13 @@ const ParentDashboard = () => {
                 </div>
 
                 <div className="flex space-x-2 pt-2">
-                  <Button size="sm" variant="outline" className="flex-1">
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => handleViewReport(child)}>
+                    <FileText className="h-4 w-4 mr-1" />
                     View Report
                   </Button>
                   {child.balance > 0 && (
-                    <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700">
+                    <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700" onClick={() => handlePayFees(child)}>
+                      <CreditCard className="h-4 w-4 mr-1" />
                       Pay Fees
                     </Button>
                   )}

@@ -3,6 +3,9 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { FileText, Check, Clock } from 'lucide-react';
+import RecordPaymentDialog from '@/components/RecordPaymentDialog';
+import GenerateInvoicesDialog from '@/components/GenerateInvoicesDialog';
+import { studentsData } from '@/data/studentsData';
 
 const Finance = () => {
   const invoices = [
@@ -45,14 +48,8 @@ const Finance = () => {
             <p className="mt-2 text-gray-600">Manage invoices, payments, and financial records</p>
           </div>
           <div className="flex space-x-3">
-            <Button variant="outline">
-              <Check className="h-4 w-4 mr-2" />
-              Record Payment
-            </Button>
-            <Button className="bg-teal-600 hover:bg-teal-700">
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Invoice
-            </Button>
+            <RecordPaymentDialog />
+            <GenerateInvoicesDialog />
           </div>
         </div>
 

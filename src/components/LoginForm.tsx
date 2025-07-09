@@ -7,15 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, GraduationCap, User, UserCheck } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, User, UserCheck, BookOpen } from 'lucide-react';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [parentPhone, setParentPhone] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
+  const [teacherPassword, setTeacherPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { login, parentLogin, isLoading } = useAuth();
+  const [showTeacherPassword, setShowTeacherPassword] = useState(false);
+  const { login, parentLogin, teacherLogin, isLoading } = useAuth();
   const { toast } = useToast();
 
   const handleStaffLogin = async (e: React.FormEvent) => {
@@ -29,6 +32,11 @@ const LoginForm = () => {
       });
       return;
     }
+
+    // Clear any existing session data before new login
+    localStorage.removeItem('shulePro_user');
+    localStorage.removeItem('shulePro_loginTime');
+    sessionStorage.clear();
 
     const success = await login(email, password);
     
@@ -58,6 +66,11 @@ const LoginForm = () => {
       return;
     }
 
+    // Clear any existing session data before new login
+    localStorage.removeItem('shulePro_user');
+    localStorage.removeItem('shulePro_loginTime');
+    sessionStorage.clear();
+
     const success = await parentLogin(admissionNumber, parentPhone);
     
     if (success) {
@@ -74,17 +87,50 @@ const LoginForm = () => {
     }
   };
 
+  const handleTeacherLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!employeeId || !teacherPassword) {
+      toast({
+        title: "Error",
+        description: "Please provide both Employee ID and password",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Clear any existing session data before new login
+    localStorage.removeItem('shulePro_user');
+    localStorage.removeItem('shulePro_loginTime');
+    sessionStorage.clear();
+
+    const success = await teacherLogin(employeeId, teacherPassword);
+    
+    if (success) {
+      toast({
+        title: "Teacher Login Successful",
+        description: "Welcome to your teacher portal!",
+      });
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Invalid Employee ID or password",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-blue-50 p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-teal-600 to-blue-600 flex items-center justify-center">
-              <GraduationCap className="h-6 w-6 text-white" />
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-green-600 to-orange-600 flex items-center justify-center">
+              <span className="text-white text-lg font-bold">NA</span>
             </div>
-            <span className="text-3xl font-bold text-gray-900">ShulePro</span>
+            <span className="text-3xl font-bold text-gray-900">Nairobi Academy</span>
           </div>
-          <p className="text-gray-600">School Management System</p>
+          <p className="text-gray-600">Excellence in Education Since 2010</p>
         </div>
 
         <Card>
@@ -96,10 +142,14 @@ const LoginForm = () => {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="staff" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="staff" className="flex items-center space-x-2">
                   <UserCheck className="h-4 w-4" />
                   <span>Staff</span>
+                </TabsTrigger>
+                <TabsTrigger value="teacher" className="flex items-center space-x-2">
+                  <BookOpen className="h-4 w-4" />
+                  <span>Teacher</span>
                 </TabsTrigger>
                 <TabsTrigger value="parent" className="flex items-center space-x-2">
                   <User className="h-4 w-4" />
@@ -153,21 +203,55 @@ const LoginForm = () => {
                   </Button>
                 </form>
 
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-sm text-gray-600 mb-3">Demo Staff Credentials:</p>
-                  <div className="space-y-2">
-                    <div className="text-xs bg-gray-50 p-2 rounded">
-                      <div className="font-medium text-gray-700">Admin</div>
-                      <div className="text-gray-600">admin@nairobi-academy.com</div>
-                      <div className="text-gray-600">password123</div>
-                    </div>
-                    <div className="text-xs bg-gray-50 p-2 rounded">
-                      <div className="font-medium text-gray-700">Accountant</div>
-                      <div className="text-gray-600">accountant@nairobi-academy.com</div>
-                      <div className="text-gray-600">password123</div>
+              </TabsContent>
+
+              <TabsContent value="teacher" className="space-y-4">
+                <form onSubmit={handleTeacherLogin} className="space-y-4">
+                  <div>
+                    <Label htmlFor="employeeId">Employee ID</Label>
+                    <Input
+                      id="employeeId"
+                      type="text"
+                      value={employeeId}
+                      onChange={(e) => setEmployeeId(e.target.value)}
+                      placeholder="e.g., EMP001"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="teacherPassword">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="teacherPassword"
+                        type={showTeacherPassword ? 'text' : 'password'}
+                        value={teacherPassword}
+                        onChange={(e) => setTeacherPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowTeacherPassword(!showTeacherPassword)}
+                      >
+                        {showTeacherPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
                   </div>
-                </div>
+
+                  <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+                    {isLoading ? 'Signing in...' : 'Sign In as Teacher'}
+                  </Button>
+                </form>
+                
+                
               </TabsContent>
 
               <TabsContent value="parent" className="space-y-4">
@@ -201,16 +285,6 @@ const LoginForm = () => {
                   </Button>
                 </form>
 
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-sm text-gray-600 mb-3">Demo Parent Login:</p>
-                  <div className="space-y-2">
-                    <div className="text-xs bg-gray-50 p-2 rounded">
-                      <div className="font-medium text-gray-700">Peter Kamau (Parent)</div>
-                      <div className="text-gray-600">Admission: NA2024001 or NA2024015</div>
-                      <div className="text-gray-600">Phone: Any 10+ digit number</div>
-                    </div>
-                  </div>
-                </div>
               </TabsContent>
             </Tabs>
           </CardContent>

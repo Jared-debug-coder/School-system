@@ -1,21 +1,59 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, DollarSign, BookOpen, Calendar, TrendingUp, AlertTriangle, UserCheck, Building } from 'lucide-react';
+import { Users, DollarSign, BookOpen, TrendingUp, AlertTriangle, UserCheck, Building } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import QuickActions from '@/components/QuickActions';
+import { studentsData } from '@/data/studentsData';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
+  // Calculate real statistics from students data
+  const totalStudents = studentsData.length;
+  const studentsWithBalance = studentsData.filter(student => 
+    parseFloat(student.balance.replace('KES ', '').replace(',', '')) > 0
+  ).length;
+  const totalOutstanding = studentsData.reduce((sum, student) => {
+    return sum + parseFloat(student.balance.replace('KES ', '').replace(',', ''));
+  }, 0);
+  
   const handleViewDetails = (section: string) => {
-    toast({
-      title: "Opening Details",
-      description: `Viewing ${section} details...`,
-    });
+    switch (section) {
+      case 'Student Management':
+        navigate('/students');
+        break;
+      case 'Financial Overview':
+        navigate('/finance');
+        break;
+      case 'Academic Management':
+        navigate('/reports');
+        break;
+      case 'System Alerts':
+        toast({
+          title: "System Alerts",
+          description: "Viewing system alerts...",
+        });
+        break;
+      case 'Activity Log':
+        toast({
+          title: "Activity Log",
+          description: "Detailed activity log feature coming soon...",
+        });
+        break;
+      default:
+        toast({
+          title: "Opening Details",
+          description: `Viewing ${section} details...`,
+        });
+    }
   };
+
 
   const overviewStats = [
     { title: 'Total Students', value: '2,847', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -197,6 +235,9 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Quick Actions */}
+        <QuickActions />
       </div>
     </Layout>
   );

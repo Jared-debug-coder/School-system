@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { studentsData } from '@/data/studentsData';
 
 const AddStudentDialog = () => {
   const [open, setOpen] = useState(false);

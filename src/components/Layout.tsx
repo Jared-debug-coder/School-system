@@ -47,11 +47,14 @@ const Layout = ({ children }: LayoutProps) => {
   const navigation = getNavigationForRole();
 
   const handleLogout = () => {
-    logout();
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
     });
+    // Small delay to show the toast before logout
+    setTimeout(() => {
+      logout();
+    }, 500);
   };
 
   return (
@@ -62,8 +65,10 @@ const Layout = ({ children }: LayoutProps) => {
           {/* Logo */}
           <div className="flex h-16 items-center justify-center border-b border-gray-200">
             <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-teal-600 to-blue-600"></div>
-              <span className="text-xl font-bold text-gray-900">ShulePro</span>
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-green-600 to-orange-600 flex items-center justify-center">
+                <span className="text-white text-sm font-bold">NA</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">Nairobi Academy</span>
             </div>
           </div>
 
