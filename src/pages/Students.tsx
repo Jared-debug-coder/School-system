@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -8,12 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { studentsData } from '@/data/studentsData';
-import StudentProfile from '@/components/StudentProfile';
 
 const Students = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<any>(null);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     admissionNumber: '',
@@ -52,8 +51,7 @@ const Students = () => {
   };
 
   const handleViewDetails = (student: any) => {
-    setSelectedStudent(student);
-    setProfileOpen(true);
+    navigate(`/students/${student.id}`);
   };
 
   return (
@@ -246,12 +244,6 @@ const Students = () => {
           </div>
         </div>
 
-        {/* Student Profile Dialog */}
-        <StudentProfile 
-          student={selectedStudent} 
-          open={profileOpen} 
-          onOpenChange={setProfileOpen} 
-        />
       </div>
     </Layout>
   );

@@ -13,6 +13,7 @@ import Students from "./pages/Students";
 import Finance from "./pages/Finance";
 import Reports from "./pages/Reports";
 import ParentDashboard from "./pages/ParentDashboard";
+import StudentProfile from "./components/StudentProfile";
 import Library from "./pages/Library";
 import NotFound from "./pages/NotFound";
 
@@ -96,8 +97,16 @@ const App = () => (
               <Route 
                 path="/students" 
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'accountant']}>
+                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher']}>
                     <Students />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/students/:id" 
+                element={
+                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher']}>
+                    <StudentProfile />
                   </ProtectedRoute>
                 } 
               />

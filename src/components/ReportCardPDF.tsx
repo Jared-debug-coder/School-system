@@ -60,14 +60,14 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
     ['Student Name:', reportData.student.name],
     ['Admission Number:', reportData.student.admissionNumber],
     ['Class:', reportData.student.class],
-    ['House:', reportData.student.house || 'N/A']
+    ['House:', reportData.student.streamName || 'N/A']
   ];
   
   const academicInfo = [
-    ['Class Teacher:', reportData.student.classTeacher || 'Mr. John Doe'],
-    ['Next Term Begins:', reportData.student.nextTermBegins || '2024-04-15'],
-    ['Term Closing:', reportData.student.termClosing || '2024-03-22'],
-    ['Position:', `${reportData.student.position || 1} out of ${reportData.student.totalStudents || 45}`]
+    ['Class Teacher:', reportData.classTeacher.name],
+    ['Next Term Begins:', reportData.nextTerm.opensOn],
+    ['Fee Due Date:', reportData.nextTerm.feeDue],
+    ['Position:', `${reportData.academic.position} out of ${reportData.academic.outOf}`]
   ];
   
   // Two column layout
@@ -104,9 +104,11 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   pdf.setFont('helvetica', 'bold');
   
   pdf.text('SUBJECT', 20, yPos + 2);
-  pdf.text('MARKS', 80, yPos + 2);
-  pdf.text('GRADE', 110, yPos + 2);
-  pdf.text('REMARKS', 140, yPos + 2);
+  pdf.text('CAT (30)', 70, yPos + 2);
+  pdf.text('EXAM (70)', 95, yPos + 2);
+  pdf.text('TOTAL', 125, yPos + 2);
+  pdf.text('GRADE', 150, yPos + 2);
+  pdf.text('REMARKS', 170, yPos + 2);
   
   yPos += 12;
   
@@ -114,7 +116,7 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   pdf.setFont('helvetica', 'normal');
   
   // Subject grades
-  reportData.subjects.forEach((subject, index) => {
+  reportData.academic.subjects.forEach((subject, index) => {
     if (yPos > 240) {
       pdf.addPage();
       yPos = 30;
@@ -127,19 +129,21 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
       pdf.rect(15, yPos - 2, 180, 6, 'F');
     }
     
-    pdf.text(subject.name, 20, yPos + 2);
-    pdf.text(subject.marks.toString(), 80, yPos + 2);
+    pdf.text(subject.subject, 20, yPos + 2);
+    pdf.text(subject.catScore.toString(), 70, yPos + 2);
+    pdf.text(subject.examScore.toString(), 95, yPos + 2);
+    pdf.text(subject.totalScore.toString(), 125, yPos + 2);
     
     // Color code grades
-    const gradeColor = subject.grade === 'A' ? [0, 128, 0] : 
-                      subject.grade === 'B' ? [0, 0, 255] :
-                      subject.grade === 'C' ? [255, 140, 0] : [255, 0, 0];
+    const gradeColor = subject.grade.startsWith('A') ? [0, 128, 0] : 
+                      subject.grade.startsWith('B') ? [0, 0, 255] :
+                      subject.grade.startsWith('C') ? [255, 140, 0] : [255, 0, 0];
     
     pdf.setTextColor(...(gradeColor as [number, number, number]));
-    pdf.text(subject.grade, 110, yPos + 2);
+    pdf.text(subject.grade, 150, yPos + 2);
     pdf.setTextColor(...textColor);
     
-    pdf.text(subject.remarks || '-', 140, yPos + 2);
+    pdf.text(subject.remarks || '-', 170, yPos + 2);
     
     yPos += 6;
   });
@@ -156,49 +160,54 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   yPos += 15;
   
   const summaryData = [
-    ['Total Marks:', `${reportData.summary.totalMarks}/${reportData.summary.possibleMarks}`],
-    ['Mean Score:', `${reportData.summary.meanScore}%`],
-    ['Grade:', reportData.summary.overallGrade],
-    ['Class Position:', `${reportData.student.position || 1} out of ${reportData.student.totalStudents || 45}`]
+    ['Total Marks:', `${reportData.academic.totalMarks}`],
+    ['Average Score:', `${reportData.academic.averageScore}%`],
+    ['Overall Grade:', reportData.academic.overallGrade],
+    ['Class Position:', `${reportData.academic.position} out of ${reportData.academic.outOf}`],
+    ['Attendance:', `${reportData.attendance.daysPresent}/${reportData.attendance.totalDays} days (${reportData.attendance.percentage}%)`],
+    ['Fee Status:', reportData.fees.status]
   ];
   
   summaryData.forEach((item, index) => {
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(item[0], 20, yPos + (index * 6));
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 80, yPos + (index * 6));
+    if (index < 3) {
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(item[0], 20, yPos + (index * 6));
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(item[1], 80, yPos + (index * 6));
+    } else {
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(item[0], 120, yPos + ((index - 3) * 6));
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(item[1], 170, yPos + ((index - 3) * 6));
+    }
   });
   
-  yPos += 35;
+  yPos += 25;
   
   // Comments Section
-  if (reportData.comments) {
-    pdf.setFillColor(...lightGray);
-    pdf.rect(15, yPos - 3, 180, 8, 'F');
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('COMMENTS', 20, yPos + 2);
-    
-    yPos += 15;
-    
-    // Class Teacher's Comment
-    if (reportData.comments.classTeacher) {
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Class Teacher:', 20, yPos);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(reportData.comments.classTeacher, 20, yPos + 6);
-      yPos += 18;
-    }
-    
-    // Head Teacher's Comment
-    if (reportData.comments.headTeacher) {
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Head Teacher:', 20, yPos);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(reportData.comments.headTeacher, 20, yPos + 6);
-      yPos += 18;
-    }
-  }
+  pdf.setFillColor(...lightGray);
+  pdf.rect(15, yPos - 3, 180, 8, 'F');
+  pdf.setFontSize(12);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('COMMENTS', 20, yPos + 2);
+  
+  yPos += 15;
+  
+  // Class Teacher's Comment
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Class Teacher:', 20, yPos);
+  pdf.setFont('helvetica', 'normal');
+  const classTeacherText = pdf.splitTextToSize(reportData.classTeacher.remarks, 170);
+  pdf.text(classTeacherText, 20, yPos + 6);
+  yPos += 6 + (classTeacherText.length * 4) + 6;
+  
+  // Head Teacher's Comment
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Head Teacher:', 20, yPos);
+  pdf.setFont('helvetica', 'normal');
+  const headTeacherText = pdf.splitTextToSize(reportData.headTeacher.remarks, 170);
+  pdf.text(headTeacherText, 20, yPos + 6);
+  yPos += 6 + (headTeacherText.length * 4) + 12;
   
   // Signature Section
   yPos = Math.max(yPos + 20, 250);
@@ -209,11 +218,11 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   // Signature lines
   pdf.line(20, yPos, 80, yPos);
   pdf.text('Class Teacher', 20, yPos + 5);
-  pdf.text('Date: ________________', 20, yPos + 10);
+  pdf.text(reportData.classTeacher.name, 20, yPos + 10);
   
   pdf.line(130, yPos, 190, yPos);
   pdf.text('Head Teacher', 130, yPos + 5);
-  pdf.text('Date: ________________', 130, yPos + 10);
+  pdf.text(reportData.headTeacher.name, 130, yPos + 10);
   
   // Footer
   yPos = 280;
