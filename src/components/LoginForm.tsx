@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, GraduationCap, User, UserCheck, BookOpen } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, User, UserCheck, BookOpen, Library } from 'lucide-react';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +16,12 @@ const LoginForm = () => {
   const [parentPhone, setParentPhone] = useState('');
   const [employeeId, setEmployeeId] = useState('');
   const [teacherPassword, setTeacherPassword] = useState('');
+  const [librarianUsername, setLibrarianUsername] = useState('');
+  const [librarianPassword, setLibrarianPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showTeacherPassword, setShowTeacherPassword] = useState(false);
-  const { login, parentLogin, teacherLogin, isLoading } = useAuth();
+  const [showLibrarianPassword, setShowLibrarianPassword] = useState(false);
+  const { login, parentLogin, teacherLogin, librarianLogin, isLoading } = useAuth();
   const { toast } = useToast();
 
   const handleStaffLogin = async (e: React.FormEvent) => {
@@ -120,6 +123,39 @@ const LoginForm = () => {
     }
   };
 
+  const handleLibrarianLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!librarianUsername || !librarianPassword) {
+      toast({
+        title: "Error",
+        description: "Please provide both username and password",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Clear any existing session data before new login
+    localStorage.removeItem('shulePro_user');
+    localStorage.removeItem('shulePro_loginTime');
+    sessionStorage.clear();
+
+    const success = await librarianLogin(librarianUsername, librarianPassword);
+    
+    if (success) {
+      toast({
+        title: "Librarian Login Successful",
+        description: "Welcome to the library system!",
+      });
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-blue-50 p-4">
       <div className="w-full max-w-md">
@@ -142,7 +178,7 @@ const LoginForm = () => {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="staff" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="staff" className="flex items-center space-x-2">
                   <UserCheck className="h-4 w-4" />
                   <span>Staff</span>
@@ -150,6 +186,10 @@ const LoginForm = () => {
                 <TabsTrigger value="teacher" className="flex items-center space-x-2">
                   <BookOpen className="h-4 w-4" />
                   <span>Teacher</span>
+                </TabsTrigger>
+                <TabsTrigger value="librarian" className="flex items-center space-x-2">
+                  <Library className="h-4 w-4" />
+                  <span>Librarian</span>
                 </TabsTrigger>
                 <TabsTrigger value="parent" className="flex items-center space-x-2">
                   <User className="h-4 w-4" />
@@ -252,6 +292,63 @@ const LoginForm = () => {
                 </form>
                 
                 
+              </TabsContent>
+
+              <TabsContent value="librarian" className="space-y-4">
+                <form onSubmit={handleLibrarianLogin} className="space-y-4">
+                  <div>
+                    <Label htmlFor="librarianUsername">Username</Label>
+                    <Input
+                      id="librarianUsername"
+                      type="text"
+                      value={librarianUsername}
+                      onChange={(e) => setLibrarianUsername(e.target.value)}
+                      placeholder="Enter any username"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="librarianPassword">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="librarianPassword"
+                        type={showLibrarianPassword ? 'text' : 'password'}
+                        value={librarianPassword}
+                        onChange={(e) => setLibrarianPassword(e.target.value)}
+                        placeholder="Enter any password"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowLibrarianPassword(!showLibrarianPassword)}
+                      >
+                        {showLibrarianPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={isLoading}>
+                    {isLoading ? 'Signing in...' : 'Sign In as Librarian'}
+                  </Button>
+                </form>
+                
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-center space-x-2 text-purple-800">
+                    <Library className="h-4 w-4" />
+                    <span className="font-medium">Librarian Access</span>
+                  </div>
+                  <p className="text-sm text-purple-700 mt-2">
+                    Enter any username and password to access the library management system.
+                  </p>
+                </div>
               </TabsContent>
 
               <TabsContent value="parent" className="space-y-4">

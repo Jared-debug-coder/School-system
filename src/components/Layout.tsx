@@ -48,6 +48,13 @@ const Layout = ({ children }: LayoutProps) => {
       ];
     }
 
+    if (user?.role === 'librarian') {
+      return [
+        { name: 'Library', href: '/library', icon: BookOpen },
+        { name: 'Students', href: '/students', icon: Users },
+      ];
+    }
+
     return [
       { name: 'Dashboard', href: '/', icon: Calendar },
     ];

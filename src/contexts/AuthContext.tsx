@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { teachersData } from '@/data/teachersData';
 import { studentsData } from '@/data/studentsData';
 
-export type UserRole = 'admin' | 'accountant' | 'parent' | 'teacher';
+export type UserRole = 'admin' | 'accountant' | 'parent' | 'teacher' | 'librarian';
 
 export interface User {
   id: string;
@@ -24,6 +24,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   parentLogin: (admissionNumber: string, parentPhone: string) => Promise<boolean>;
   teacherLogin: (employeeId: string, password: string) => Promise<boolean>;
+  librarianLogin: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -158,6 +159,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
+  const librarianLogin = async (username: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      // Accept any username and password for librarian login
+      if (username && password) {
+        const userData = {
+          id: 'lib001',
+          name: 'Librarian',
+          email: `${username}@nairobi-academy.com`,
+          role: 'librarian' as UserRole
+        };
+        
+        setUser(userData);
+        localStorage.setItem('shulePro_user', JSON.stringify(userData));
+        localStorage.setItem('shulePro_loginTime', new Date().toISOString());
+        
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Librarian login error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const parentLogin = async (admissionNumber: string, parentPhone: string): Promise<boolean> => {
     setIsLoading(true);
     
@@ -220,7 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, parentLogin, teacherLogin, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, parentLogin, teacherLogin, librarianLogin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -52,6 +52,8 @@ const RoleBasedRedirect = () => {
       return <Navigate to="/teacher" replace />;
     case 'parent':
       return <Navigate to="/parent" replace />;
+    case 'librarian':
+      return <Navigate to="/library" replace />;
     default:
       return <Navigate to="/admin" replace />;
   }
@@ -97,7 +99,7 @@ const App = () => (
               <Route 
                 path="/students" 
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher']}>
+                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher', 'librarian']}>
                     <Students />
                   </ProtectedRoute>
                 } 
@@ -105,7 +107,7 @@ const App = () => (
               <Route 
                 path="/students/:id" 
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher']}>
+                  <ProtectedRoute allowedRoles={['admin', 'accountant', 'teacher', 'librarian']}>
                     <StudentProfile />
                   </ProtectedRoute>
                 } 
@@ -137,7 +139,7 @@ const App = () => (
               <Route 
                 path="/library" 
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'teacher']}>
+                  <ProtectedRoute allowedRoles={['admin', 'teacher', 'librarian']}>
                     <Library />
                   </ProtectedRoute>
                 } 
