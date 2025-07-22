@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Calendar, Book, FileText, LogOut } from 'lucide-react';
+import { Users, Calendar, Book, FileText, LogOut, BookOpen } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
         { name: 'Dashboard', href: '/', icon: Calendar },
         { name: 'Students', href: '/students', icon: Users },
         { name: 'Finance', href: '/finance', icon: FileText },
+        { name: 'Library', href: '/library', icon: BookOpen },
         { name: 'Reports', href: '/reports', icon: Book },
       ];
     }
@@ -36,6 +37,14 @@ const Layout = ({ children }: LayoutProps) => {
     if (user?.role === 'parent') {
       return [
         { name: 'Dashboard', href: '/parent', icon: Calendar },
+      ];
+    }
+
+    if (user?.role === 'teacher') {
+      return [
+        { name: 'Dashboard', href: '/teacher', icon: Calendar },
+        { name: 'Students', href: '/students', icon: Users },
+        { name: 'Library', href: '/library', icon: BookOpen },
       ];
     }
 

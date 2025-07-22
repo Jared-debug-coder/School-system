@@ -13,6 +13,7 @@ import Students from "./pages/Students";
 import Finance from "./pages/Finance";
 import Reports from "./pages/Reports";
 import ParentDashboard from "./pages/ParentDashboard";
+import Library from "./pages/Library";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -121,6 +122,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['parent']}>
                     <ParentDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/library" 
+                element={
+                  <ProtectedRoute allowedRoles={['admin', 'teacher']}>
+                    <Library />
                   </ProtectedRoute>
                 } 
               />
