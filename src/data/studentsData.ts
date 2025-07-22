@@ -1,5 +1,20 @@
 
-export const studentsData = [
+export interface Student {
+  id: number;
+  name: string;
+  class: string;
+  admissionNumber: string;
+  balance: string;
+  status: string;
+  guardian: string;
+  phone: string;
+  email: string;
+  dateOfBirth: string;
+  gender: string;
+  residence: string;
+}
+
+export const studentsData: Student[] = [
   {
     id: 1,
     name: 'John Kamau',

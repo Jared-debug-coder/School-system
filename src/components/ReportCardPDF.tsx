@@ -5,11 +5,11 @@ import { ReportCardData } from '@/data/academicData';
 export const generateReportCardPDF = (reportData: ReportCardData): void => {
   const pdf = new jsPDF('p', 'mm', 'a4');
   
-  // Colors
-  const primaryColor = [34, 139, 34]; // Forest Green
-  const secondaryColor = [255, 140, 0]; // Orange
-  const textColor = [0, 0, 0];
-  const lightGray = [240, 240, 240];
+  // Colors as proper tuples
+  const primaryColor: [number, number, number] = [34, 139, 34]; // Forest Green
+  const secondaryColor: [number, number, number] = [255, 140, 0]; // Orange
+  const textColor: [number, number, number] = [0, 0, 0];
+  const lightGray: [number, number, number] = [240, 240, 240];
   
   // Header
   pdf.setFillColor(...primaryColor);
@@ -48,7 +48,6 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   // Student Information Section
   let yPos = 65;
   
-  // Section Header
   pdf.setFillColor(...lightGray);
   pdf.rect(15, yPos - 3, 180, 8, 'F');
   pdf.setFontSize(12);
@@ -57,41 +56,38 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   
   yPos += 15;
   
-  // Student details in two columns
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'normal');
-  
-  const leftCol = [
-    ['Name:', reportData.student.name],
-    ['Admission No:', reportData.student.admissionNumber],
+  const studentInfo = [
+    ['Student Name:', reportData.student.name],
+    ['Admission Number:', reportData.student.admissionNumber],
     ['Class:', reportData.student.class],
-    ['Gender:', reportData.student.gender]
+    ['House:', reportData.student.house || 'N/A']
   ];
   
-  const rightCol = [
-    ['Date of Birth:', reportData.student.dateOfBirth],
-    ['Residence:', reportData.student.residence],
-    ['Term:', reportData.student.term],
-    ['Year:', reportData.student.year]
+  const academicInfo = [
+    ['Class Teacher:', reportData.student.classTeacher || 'Mr. John Doe'],
+    ['Next Term Begins:', reportData.student.nextTermBegins || '2024-04-15'],
+    ['Term Closing:', reportData.student.termClosing || '2024-03-22'],
+    ['Position:', `${reportData.student.position || 1} out of ${reportData.student.totalStudents || 45}`]
   ];
   
-  leftCol.forEach((item, index) => {
+  // Two column layout
+  studentInfo.forEach((item, index) => {
     pdf.setFont('helvetica', 'bold');
     pdf.text(item[0], 20, yPos + (index * 6));
     pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 50, yPos + (index * 6));
+    pdf.text(item[1], 70, yPos + (index * 6));
   });
   
-  rightCol.forEach((item, index) => {
+  academicInfo.forEach((item, index) => {
     pdf.setFont('helvetica', 'bold');
     pdf.text(item[0], 120, yPos + (index * 6));
     pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 150, yPos + (index * 6));
+    pdf.text(item[1], 170, yPos + (index * 6));
   });
   
   yPos += 35;
   
-  // Academic Performance Section
+  // Subjects and Grades Section
   pdf.setFillColor(...lightGray);
   pdf.rect(15, yPos - 3, 180, 8, 'F');
   pdf.setFontSize(12);
@@ -104,258 +100,133 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   pdf.setFillColor(...primaryColor);
   pdf.rect(15, yPos - 3, 180, 8, 'F');
   pdf.setTextColor(255, 255, 255);
-  pdf.setFontSize(9);
+  pdf.setFontSize(10);
   pdf.setFont('helvetica', 'bold');
   
-  const headers = ['SUBJECT', 'CAT (30)', 'EXAM (70)', 'TOTAL (100)', 'GRADE', 'REMARKS'];
-  const colWidths = [60, 20, 25, 25, 20, 30];
-  let xPos = 20;
-  
-  headers.forEach((header, index) => {
-    pdf.text(header, xPos, yPos + 2);
-    xPos += colWidths[index];
-  });
+  pdf.text('SUBJECT', 20, yPos + 2);
+  pdf.text('MARKS', 80, yPos + 2);
+  pdf.text('GRADE', 110, yPos + 2);
+  pdf.text('REMARKS', 140, yPos + 2);
   
   yPos += 12;
   
-  // Subject rows
   pdf.setTextColor(...textColor);
   pdf.setFont('helvetica', 'normal');
   
-  reportData.academic.subjects.forEach((subject, index) => {
-    if (yPos > 250) { // New page if needed
+  // Subject grades
+  reportData.subjects.forEach((subject, index) => {
+    if (yPos > 240) {
       pdf.addPage();
       yPos = 30;
     }
     
     // Alternate row colors
     if (index % 2 === 0) {
-      pdf.setFillColor(248, 248, 248);
+      const rowColor: [number, number, number] = [248, 248, 248];
+      pdf.setFillColor(...rowColor);
       pdf.rect(15, yPos - 2, 180, 6, 'F');
     }
     
-    xPos = 20;
-    const values = [
-      subject.subject,
-      subject.catScore.toString(),
-      subject.examScore.toString(),
-      subject.totalScore.toString(),
-      subject.grade,
-      subject.remarks
-    ];
+    pdf.text(subject.name, 20, yPos + 2);
+    pdf.text(subject.marks.toString(), 80, yPos + 2);
     
-    values.forEach((value, colIndex) => {
-      pdf.text(value, xPos, yPos + 2);
-      xPos += colWidths[colIndex];
-    });
+    // Color code grades
+    const gradeColor = subject.grade === 'A' ? [0, 128, 0] : 
+                      subject.grade === 'B' ? [0, 0, 255] :
+                      subject.grade === 'C' ? [255, 140, 0] : [255, 0, 0];
+    
+    pdf.setTextColor(...(gradeColor as [number, number, number]));
+    pdf.text(subject.grade, 110, yPos + 2);
+    pdf.setTextColor(...textColor);
+    
+    pdf.text(subject.remarks || '-', 140, yPos + 2);
     
     yPos += 6;
   });
   
-  // Summary Section
   yPos += 10;
+  
+  // Summary Section
   pdf.setFillColor(...lightGray);
   pdf.rect(15, yPos - 3, 180, 8, 'F');
   pdf.setFontSize(12);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('SUMMARY', 20, yPos + 2);
+  pdf.text('TERM SUMMARY', 20, yPos + 2);
   
   yPos += 15;
   
   const summaryData = [
-    ['Total Marks:', `${reportData.academic.totalMarks}/${reportData.academic.subjects.length * 100}`],
-    ['Average Score:', `${reportData.academic.averageScore}%`],
-    ['Overall Grade:', reportData.academic.overallGrade],
-    ['Class Position:', `${reportData.academic.position} out of ${reportData.academic.outOf}`]
+    ['Total Marks:', `${reportData.summary.totalMarks}/${reportData.summary.possibleMarks}`],
+    ['Mean Score:', `${reportData.summary.meanScore}%`],
+    ['Grade:', reportData.summary.overallGrade],
+    ['Class Position:', `${reportData.student.position || 1} out of ${reportData.student.totalStudents || 45}`]
   ];
   
   summaryData.forEach((item, index) => {
     pdf.setFont('helvetica', 'bold');
     pdf.text(item[0], 20, yPos + (index * 6));
     pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 70, yPos + (index * 6));
+    pdf.text(item[1], 80, yPos + (index * 6));
   });
   
-  // Attendance Section
   yPos += 35;
-  pdf.setFillColor(...lightGray);
-  pdf.rect(15, yPos - 3, 180, 8, 'F');
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('ATTENDANCE', 20, yPos + 2);
-  
-  yPos += 15;
-  
-  const attendanceData = [
-    ['Days Present:', reportData.attendance.daysPresent.toString()],
-    ['Days Absent:', reportData.attendance.daysAbsent.toString()],
-    ['Total Days:', reportData.attendance.totalDays.toString()],
-    ['Attendance %:', `${reportData.attendance.percentage}%`]
-  ];
-  
-  attendanceData.forEach((item, index) => {
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(item[0], 20, yPos + (index * 6));
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 70, yPos + (index * 6));
-  });
-  
-  // Fees Section
-  const rightYPos = yPos;
-  const feesData = [
-    ['Fee Balance:', reportData.fees.balance],
-    ['Fee Status:', reportData.fees.status],
-    ['Next Term Opens:', reportData.nextTerm.opensOn],
-    ['Fees Due:', reportData.nextTerm.feeDue]
-  ];
-  
-  feesData.forEach((item, index) => {
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(item[0], 120, rightYPos + (index * 6));
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(item[1], 170, rightYPos + (index * 6));
-  });
-  
-  // Check if we need a new page for comments
-  if (yPos > 230) {
-    pdf.addPage();
-    yPos = 30;
-  }
   
   // Comments Section
-  yPos += 15;
-  pdf.setFillColor(...lightGray);
-  pdf.rect(15, yPos - 3, 180, 8, 'F');
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(...textColor);
-  pdf.text('TEACHER COMMENTS', 20, yPos + 2);
+  if (reportData.comments) {
+    pdf.setFillColor(...lightGray);
+    pdf.rect(15, yPos - 3, 180, 8, 'F');
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('COMMENTS', 20, yPos + 2);
+    
+    yPos += 15;
+    
+    // Class Teacher's Comment
+    if (reportData.comments.classTeacher) {
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Class Teacher:', 20, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(reportData.comments.classTeacher, 20, yPos + 6);
+      yPos += 18;
+    }
+    
+    // Head Teacher's Comment
+    if (reportData.comments.headTeacher) {
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Head Teacher:', 20, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(reportData.comments.headTeacher, 20, yPos + 6);
+      yPos += 18;
+    }
+  }
   
-  yPos += 15;
+  // Signature Section
+  yPos = Math.max(yPos + 20, 250);
   
-  // Class Teacher Comment
   pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Class Teacher:', 20, yPos);
   pdf.setFont('helvetica', 'normal');
-  pdf.text(reportData.classTeacher.name, 70, yPos);
   
-  yPos += 8;
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('Remarks:', 20, yPos);
+  // Signature lines
+  pdf.line(20, yPos, 80, yPos);
+  pdf.text('Class Teacher', 20, yPos + 5);
+  pdf.text('Date: ________________', 20, yPos + 10);
   
-  yPos += 6;
-  pdf.setFont('helvetica', 'normal');
-  const classTeacherRemarks = pdf.splitTextToSize(reportData.classTeacher.remarks, 170);
-  pdf.text(classTeacherRemarks, 20, yPos);
-  
-  yPos += (classTeacherRemarks.length * 5) + 15;
-  
-  // Head Teacher Comment
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Head Teacher:', 20, yPos);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text(reportData.headTeacher.name, 70, yPos);
-  
-  yPos += 8;
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('Remarks:', 20, yPos);
-  
-  yPos += 6;
-  pdf.setFont('helvetica', 'normal');
-  const headTeacherRemarks = pdf.splitTextToSize(reportData.headTeacher.remarks, 170);
-  pdf.text(headTeacherRemarks, 20, yPos);
-  
-  yPos += (headTeacherRemarks.length * 5) + 10;
+  pdf.line(130, yPos, 190, yPos);
+  pdf.text('Head Teacher', 130, yPos + 5);
+  pdf.text('Date: ________________', 130, yPos + 10);
   
   // Footer
   yPos = 280;
+  const footerColor: [number, number, number] = [100, 100, 100];
   pdf.setFontSize(8);
+  pdf.setTextColor(...footerColor);
   pdf.setFont('helvetica', 'italic');
-  pdf.text('Generated on: ' + new Date().toLocaleDateString(), 20, yPos);
-  pdf.text('Nairobi Academy - Excellence in Education', 105, yPos, { align: 'center' });
+  pdf.text('This is a computer-generated report card. For inquiries, contact the school office.', 20, yPos);
+  pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, yPos + 5);
+  pdf.text('Nairobi Academy - Excellence in Education', 105, yPos + 2, { align: 'center' });
   
-  // Save the PDF
-  const fileName = `${reportData.student.name.replace(/\s+/g, '_')}_${reportData.student.term}_${reportData.student.year}_ReportCard.pdf`;
-  pdf.save(fileName);
+  // Save PDF
+  pdf.save(`Report_Card_${reportData.student.name.replace(/\s+/g, '_')}_${reportData.student.term}_${reportData.student.year}.pdf`);
 };
 
-// React component for rendering report card (for preview if needed)
-interface ReportCardProps {
-  reportData: ReportCardData;
-}
-
-export const ReportCard: React.FC<ReportCardProps> = ({ reportData }) => {
-  return (
-    <div className="bg-white p-8 max-w-4xl mx-auto" id="report-card">
-      {/* This component can be used for preview or HTML to PDF conversion */}
-      <div className="header bg-green-600 text-white p-4 rounded-t-lg">
-        <div className="flex items-center space-x-4">
-          <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-            <span className="text-2xl font-bold">NA</span>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">NAIROBI ACADEMY</h1>
-            <p className="text-sm">P.O. Box 12345-00100, Nairobi</p>
-            <p className="text-sm">Tel: +254 20 123 4567</p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="content p-6 border-x border-b rounded-b-lg">
-        <h2 className="text-xl font-bold text-center mb-4">STUDENT REPORT CARD</h2>
-        <p className="text-center mb-6">{reportData.student.term} {reportData.student.year}</p>
-        
-        {/* Student Information */}
-        <div className="mb-6">
-          <h3 className="bg-gray-100 p-2 font-bold">STUDENT INFORMATION</h3>
-          <div className="grid grid-cols-2 gap-4 p-4">
-            <div>
-              <p><strong>Name:</strong> {reportData.student.name}</p>
-              <p><strong>Admission No:</strong> {reportData.student.admissionNumber}</p>
-              <p><strong>Class:</strong> {reportData.student.class}</p>
-              <p><strong>Gender:</strong> {reportData.student.gender}</p>
-            </div>
-            <div>
-              <p><strong>Date of Birth:</strong> {reportData.student.dateOfBirth}</p>
-              <p><strong>Residence:</strong> {reportData.student.residence}</p>
-              <p><strong>Term:</strong> {reportData.student.term}</p>
-              <p><strong>Year:</strong> {reportData.student.year}</p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Academic Performance */}
-        <div className="mb-6">
-          <h3 className="bg-gray-100 p-2 font-bold">ACADEMIC PERFORMANCE</h3>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-green-600 text-white">
-                <th className="border border-gray-300 p-2">SUBJECT</th>
-                <th className="border border-gray-300 p-2">CAT (30)</th>
-                <th className="border border-gray-300 p-2">EXAM (70)</th>
-                <th className="border border-gray-300 p-2">TOTAL (100)</th>
-                <th className="border border-gray-300 p-2">GRADE</th>
-                <th className="border border-gray-300 p-2">REMARKS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.academic.subjects.map((subject, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                  <td className="border border-gray-300 p-2">{subject.subject}</td>
-                  <td className="border border-gray-300 p-2 text-center">{subject.catScore}</td>
-                  <td className="border border-gray-300 p-2 text-center">{subject.examScore}</td>
-                  <td className="border border-gray-300 p-2 text-center">{subject.totalScore}</td>
-                  <td className="border border-gray-300 p-2 text-center font-bold">{subject.grade}</td>
-                  <td className="border border-gray-300 p-2">{subject.remarks}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Rest of the component would continue with summary, attendance, etc. */}
-      </div>
-    </div>
-  );
-};
+export default generateReportCardPDF;

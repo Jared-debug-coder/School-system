@@ -38,11 +38,11 @@ export const generateFeeStatementPDF = (admissionNumber: string): boolean => {
 
   const pdf = new jsPDF('p', 'mm', 'a4');
   
-  // Colors
-  const primaryColor = [34, 139, 34]; // Forest Green
-  const secondaryColor = [255, 140, 0]; // Orange
-  const textColor = [0, 0, 0];
-  const lightGray = [240, 240, 240];
+  // Colors as tuples for proper TypeScript typing
+  const primaryColor: [number, number, number] = [34, 139, 34]; // Forest Green
+  const secondaryColor: [number, number, number] = [255, 140, 0]; // Orange
+  const textColor: [number, number, number] = [0, 0, 0];
+  const lightGray: [number, number, number] = [240, 240, 240];
   
   // Header
   pdf.setFillColor(...primaryColor);
@@ -173,7 +173,8 @@ export const generateFeeStatementPDF = (admissionNumber: string): boolean => {
     
     // Alternate row colors
     if (index % 2 === 0) {
-      pdf.setFillColor(248, 248, 248);
+      const rowColor: [number, number, number] = [248, 248, 248];
+      pdf.setFillColor(...rowColor);
       pdf.rect(15, yPos - 2, 180, 6, 'F');
     }
     
@@ -276,7 +277,8 @@ export const generateFeeStatementPDF = (admissionNumber: string): boolean => {
       }
       
       if (index % 2 === 0) {
-        pdf.setFillColor(248, 248, 248);
+        const rowColor: [number, number, number] = [248, 248, 248];
+        pdf.setFillColor(...rowColor);
         pdf.rect(15, yPos - 2, 180, 6, 'F');
       }
       
@@ -296,9 +298,12 @@ export const generateFeeStatementPDF = (admissionNumber: string): boolean => {
   // Outstanding Balance Notice
   if (currentBalance > 0) {
     yPos += 10;
-    pdf.setFillColor(255, 245, 245);
+    const noticeColor: [number, number, number] = [255, 245, 245];
+    const borderColor: [number, number, number] = [255, 0, 0];
+    
+    pdf.setFillColor(...noticeColor);
     pdf.rect(15, yPos - 5, 180, 20, 'F');
-    pdf.setFillColor(255, 0, 0);
+    pdf.setFillColor(...borderColor);
     pdf.rect(15, yPos - 5, 5, 20, 'F');
     
     pdf.setTextColor(180, 0, 0);
@@ -316,8 +321,9 @@ export const generateFeeStatementPDF = (admissionNumber: string): boolean => {
   
   // Footer
   yPos = 280;
+  const footerColor: [number, number, number] = [100, 100, 100];
   pdf.setFontSize(8);
-  pdf.setTextColor(100, 100, 100);
+  pdf.setTextColor(...footerColor);
   pdf.setFont('helvetica', 'italic');
   pdf.text('This is a computer-generated statement. For inquiries, contact the accounts office.', 20, yPos);
   pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, yPos + 5);
