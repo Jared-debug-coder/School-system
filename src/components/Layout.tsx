@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Calendar, Book, FileText, LogOut } from 'lucide-react';
+import { Users, Calendar, Book, FileText, LogOut, Package, BookOpen, Microscope, Heart, Building, Shield, UserCheck, GraduationCap, UsersRound } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,66 @@ const Layout = ({ children }: LayoutProps) => {
       ];
     }
 
+    if (user?.role === 'teacher') {
+      return [
+        { name: 'Dashboard', href: '/teacher', icon: Calendar },
+      ];
+    }
+
+    if (user?.role === 'storekeeper') {
+      return [
+        { name: 'Store Dashboard', href: '/store', icon: Package },
+      ];
+    }
+
+    if (user?.role === 'librarian') {
+      return [
+        { name: 'Library Management', href: '/library', icon: BookOpen },
+      ];
+    }
+
+    if (user?.role === 'lab_technician') {
+      return [
+        { name: 'Lab Management', href: '/lab', icon: Microscope },
+      ];
+    }
+
+    if (user?.role === 'nurse') {
+      return [
+        { name: 'Health Records', href: '/health', icon: Heart },
+      ];
+    }
+
+    if (user?.role === 'hostel_warden') {
+      return [
+        { name: 'Hostel Management', href: '/hostel', icon: Building },
+      ];
+    }
+
+    if (user?.role === 'discipline_master') {
+      return [
+        { name: 'Discipline Management', href: '/discipline', icon: Shield },
+      ];
+    }
+
+    if (user?.role === 'hr_manager') {
+      return [
+        { name: 'Staff Management', href: '/staff', icon: UserCheck },
+      ];
+    }
+
+    if (user?.role === 'exam_officer') {
+      return [
+        { name: 'Examination Office', href: '/exams', icon: GraduationCap },
+      ];
+    }
+
+    if (user?.role === 'alumni_coordinator') {
+      return [
+        { name: 'Alumni Management', href: '/alumni', icon: UsersRound },
+      ];
+    }
+
     return [
       { name: 'Dashboard', href: '/', icon: Calendar },
     ];
@@ -66,9 +126,9 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="flex h-16 items-center justify-center border-b border-gray-200">
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-green-600 to-orange-600 flex items-center justify-center">
-                <span className="text-white text-sm font-bold">NA</span>
+            <span className="text-white text-lg font-bold">DS</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Nairobi Academy</span>
+              <span className="text-xl font-bold text-gray-900">Drumvale Secondary School</span>
             </div>
           </div>
 

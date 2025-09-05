@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { teachersData } from '@/data/teachersData';
 import { studentsData } from '@/data/studentsData';
 
-export type UserRole = 'admin' | 'accountant' | 'parent' | 'teacher';
+export type UserRole = 'admin' | 'accountant' | 'parent' | 'teacher' | 'storekeeper' | 'librarian' | 'lab_technician' | 'nurse' | 'hostel_warden' | 'discipline_master' | 'hr_manager' | 'exam_officer' | 'alumni_coordinator';
 
 export interface User {
   id: string;
@@ -34,17 +34,89 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const mockUsers: User[] = [
   {
     id: '1',
-    name: 'John Mwangi',
-    email: 'admin@nairobi-academy.com',
+    name: 'Jared Ombongi',
+    email: 'admin@drumvale-secondary.com',
     role: 'admin',
-    schoolName: 'Nairobi Academy',
+    schoolName: 'Drumvale Secondary School',
   },
   {
     id: '2',
     name: 'Grace Wanjiku',
-    email: 'accountant@nairobi-academy.com',
+    email: 'accountant@drumvale-secondary.com',
     role: 'accountant',
-    schoolName: 'Nairobi Academy',
+    schoolName: 'Drumvale Secondary School',
+  },
+  {
+    id: '8',
+    name: 'Mary Njeri',
+    email: 'storekeeper@drumvale-secondary.com',
+    role: 'storekeeper',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-ST-001',
+  },
+  {
+    id: '9',
+    name: 'James Mutua',
+    email: 'librarian@drumvale-secondary.com',
+    role: 'librarian',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-LIB-001',
+  },
+  {
+    id: '10',
+    name: 'Alice Wanjiku',
+    email: 'lab@drumvale-secondary.com',
+    role: 'lab_technician',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-LAB-001',
+  },
+  {
+    id: '11',
+    name: 'Dr. Susan Mwangi',
+    email: 'nurse@drumvale-secondary.com',
+    role: 'nurse',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-NUR-001',
+  },
+  {
+    id: '12',
+    name: 'Patrick Ochieng',
+    email: 'hostel@drumvale-secondary.com',
+    role: 'hostel_warden',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-HOS-001',
+  },
+  {
+    id: '13',
+    name: 'Michael Kariuki',
+    email: 'discipline@drumvale-secondary.com',
+    role: 'discipline_master',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-DIS-001',
+  },
+  {
+    id: '14',
+    name: 'Nancy Wanjiru',
+    email: 'hr@drumvale-secondary.com',
+    role: 'hr_manager',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-HR-001',
+  },
+  {
+    id: '15',
+    name: 'David Kiptoo',
+    email: 'exam@drumvale-secondary.com',
+    role: 'exam_officer',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-EXM-001',
+  },
+  {
+    id: '16',
+    name: 'Ruth Akinyi',
+    email: 'alumni@drumvale-secondary.com',
+    role: 'alumni_coordinator',
+    schoolName: 'Drumvale Secondary School',
+    employeeId: 'EMP-ALM-001',
   },
 ];
 
@@ -55,35 +127,35 @@ const parentUsers: User[] = [
     name: 'Peter Kamau',
     email: 'peter.kamau@gmail.com',
     role: 'parent',
-    children: ['NA2024001', 'NA2024015'],
+    children: ['DS2024001', 'DS2024015'],
   },
   {
     id: '4',
     name: 'Jane Wanjiku',
     email: 'jane.wanjiku@gmail.com',
     role: 'parent',
-    children: ['NA2024002'],
+    children: ['DS2024002'],
   },
   {
     id: '5',
     name: 'Robert Ochieng',
     email: 'robert.ochieng@gmail.com',
     role: 'parent',
-    children: ['NA2024003'],
+    children: ['DS2024003'],
   },
   {
     id: '6',
     name: 'Jane Mwangi',
     email: 'jane.mwangi@gmail.com',
     role: 'parent',
-    children: ['NA2024004'],
+    children: ['DS2024004'],
   },
   {
     id: '7',
     name: 'Paul Kiprotich',
     email: 'paul.kiprotich@gmail.com',
     role: 'parent',
-    children: ['NA2024005'],
+    children: ['DS2024005'],
   },
 ];
 

@@ -101,27 +101,63 @@ export function updateStudentSubjectGrade(admissionNumber: string, subject: stri
   let student = studentsData.find(s => s.admissionNumber === admissionNumber);
   if (!student) return null;
   
+  const totalScore = catScore + examScore;
+  const gradeInfo = getGradeInfo(totalScore);
+  
+  // Find or create academic record for this student
+  let academicRecord = academicDataStore.find(record => record.studentId === student.id);
+  if (!academicRecord) {
+    // Create new academic record
+    const performanceLevel = getStudentPerformanceLevel(student.name);
+    const subjects = generateSubjectGrades(student.class, performanceLevel);
+    
+    const subjectRecords: Record<string, { marks: number; grade: string; catScore: number; examScore: number; }> = {};
+    subjects.forEach(sub => {
+      subjectRecords[sub.subject] = {
+        marks: sub.totalScore,
+        grade: sub.grade,
+        catScore: sub.catScore,
+        examScore: sub.examScore
+      };
+    });
+    
+    academicRecord = {
+      studentId: student.id,
+      subjects: subjectRecords,
+      reportGenerated: false
+    };
+    academicDataStore.push(academicRecord);
+  }
+  
+  // Update the specific subject marks
+  academicRecord.subjects[subject] = {
+    marks: totalScore,
+    grade: gradeInfo.grade,
+    catScore: catScore,
+    examScore: examScore
+  };
+  
+  // Generate updated report card
   const performanceLevel = getStudentPerformanceLevel(student.name);
-  const subjects = generateSubjectGrades(student.class, performanceLevel).map(sub => {
-    if(sub.subject === subject) {
-      const totalScore = catScore + examScore;
-      const gradeInfo = getGradeInfo(totalScore);
+  const allSubjects = generateSubjectGrades(student.class, performanceLevel).map(sub => {
+    if (academicRecord!.subjects[sub.subject]) {
+      const subjectData = academicRecord!.subjects[sub.subject];
       return {
         ...sub,
-        catScore,
-        examScore,
-        totalScore,
-        grade: gradeInfo.grade,
+        catScore: subjectData.catScore,
+        examScore: subjectData.examScore,
+        totalScore: subjectData.marks,
+        grade: subjectData.grade,
         remarks: gradeInfo.remarks
       };
     }
     return sub;
   });
 
-  const totalMarks = subjects.reduce((sum, subject) => sum + subject.totalScore, 0);
-  const averageScore = Math.round((totalMarks / subjects.length) * 100) / 100;
+  const totalMarks = allSubjects.reduce((sum, subject) => sum + subject.totalScore, 0);
+  const averageScore = Math.round((totalMarks / allSubjects.length) * 100) / 100;
   const overallGradeInfo = getGradeInfo(averageScore);
-  const position = subjects.findIndex(sub => sub.subject === subject) + 1;
+  const position = Math.floor(Math.random() * 35) + 1; // Random position for now
 
   return {
     student: {
@@ -136,7 +172,7 @@ export function updateStudentSubjectGrade(admissionNumber: string, subject: stri
       residence: student.residence
     },
     academic: {
-      subjects,
+      subjects: allSubjects,
       totalMarks,
       averageScore,
       overallGrade: overallGradeInfo.grade,
@@ -144,10 +180,10 @@ export function updateStudentSubjectGrade(admissionNumber: string, subject: stri
       outOf: 35
     },
     attendance: {
-      daysPresent: 0,
-      daysAbsent: 0,
-      totalDays: 0,
-      percentage: 0
+      daysPresent: Math.floor(Math.random() * 63) + 55,
+      daysAbsent: Math.floor(Math.random() * 8),
+      totalDays: 63,
+      percentage: Math.floor(Math.random() * 20) + 80
     },
     fees: {
       balance: student.balance,
@@ -362,3 +398,107 @@ export function generateReportCard(admissionNumber: string): ReportCardData | nu
     }
   };
 }
+
+// Academic data interface for exam office
+export interface AcademicRecord {
+  studentId: string;
+  subjects: Record<string, { marks: number; grade: string; catScore: number; examScore: number; }>;
+  reportGenerated: boolean;
+}
+
+// Generate sample academic data - Now mutable for real-time updates
+let academicDataStore: AcademicRecord[] = studentsData.slice(0, 150).map(student => {
+  const performanceLevel = getStudentPerformanceLevel(student.name);
+  const subjects = generateSubjectGrades(student.class, performanceLevel);
+  
+  const subjectRecords: Record<string, { marks: number; grade: string; catScore: number; examScore: number; }> = {};
+  subjects.forEach(subject => {
+    subjectRecords[subject.subject] = {
+      marks: subject.totalScore,
+      grade: subject.grade,
+      catScore: subject.catScore,
+      examScore: subject.examScore
+    };
+  });
+  
+  return {
+    studentId: student.id,
+    subjects: subjectRecords,
+    reportGenerated: Math.random() > 0.3 // 70% have reports generated
+  };
+});
+
+// Export getter function to access current data
+export const getAcademicData = () => academicDataStore;
+
+// Legacy export for backwards compatibility
+export const academicData = academicDataStore;
+
+// Export utility functions
+export const getSubjectsByForm = () => subjectsByForm;
+
+export const getGradeScale = () => gradeScale.map(scale => ({
+  grade: scale.grade,
+  range: scale.min === 0 ? `${scale.min}%` : `${scale.min}%+`,
+  remarks: scale.remarks
+}));
+
+export const getPerformanceLevel = (marks: number) => {
+  const gradeInfo = getGradeInfo(marks);
+  return {
+    grade: gradeInfo.grade,
+    level: gradeInfo.remarks
+  };
+};
+
+// Function to mark reports as generated
+export const markReportAsGenerated = (studentId: string): boolean => {
+  const record = academicDataStore.find(r => r.studentId === studentId);
+  if (record) {
+    record.reportGenerated = true;
+    return true;
+  }
+  return false;
+};
+
+// Function to generate all reports for a class
+export const generateAllReportsForClass = (className: string): { success: number; failed: number; } => {
+  const classStudents = studentsData.filter(s => s.class === className);
+  let success = 0;
+  let failed = 0;
+  
+  classStudents.forEach(student => {
+    if (markReportAsGenerated(student.id)) {
+      success++;
+    } else {
+      failed++;
+    }
+  });
+  
+  return { success, failed };
+};
+
+// Function to generate all reports for all students
+export const generateAllReports = (): { success: number; failed: number; } => {
+  let success = 0;
+  let failed = 0;
+  
+  academicDataStore.forEach(record => {
+    record.reportGenerated = true;
+    success++;
+  });
+  
+  return { success, failed };
+};
+
+// Function to get students needing reports
+export const getStudentsNeedingReports = (): any[] => {
+  return studentsData.filter(student => 
+    !academicDataStore.some(record => record.studentId === student.id && record.reportGenerated)
+  );
+};
+
+// Function to get completed reports count
+export const getCompletedReportsCount = (): number => {
+  return academicDataStore.filter(record => record.reportGenerated).length;
+};

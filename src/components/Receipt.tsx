@@ -167,9 +167,9 @@ const Receipt: React.FC<ReceiptProps> = ({ data, onPrint, onClose }) => {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9L5 11.18V17.18C5 17.97 5.63 18.6 6.42 18.6H17.58C18.37 18.6 19 17.97 19 17.18V11.18L23 9L12 3ZM6.5 10.47L12 7.61L17.5 10.47L12 13.33L6.5 10.47ZM18 16.7H6V12.24L12 15.54L18 12.24V16.7Z"/>
                 </svg>
-                Nairobi Academy
+                Drumvale Secondary School
               </div>
-              <div class="school-tagline">Excellence in Education</div>
+              <div class="school-tagline">Nurturing Tomorrow's Leaders</div>
               <div class="receipt-title">PAYMENT RECEIPT</div>
               <div class="receipt-number">Receipt #: ${data.receiptNumber}</div>
             </div>
@@ -254,11 +254,11 @@ const Receipt: React.FC<ReceiptProps> = ({ data, onPrint, onClose }) => {
             </div>
 
             <div class="footer">
-              <div><strong>Nairobi Academy</strong> - Excellence in Education</div>
+              <div><strong>Drumvale Secondary School</strong> - Nurturing Tomorrow's Leaders</div>
               <div class="contact-info">
                 <span>📍 P.O. Box 12345, Nairobi, Kenya</span>
                 <span>📞 +254 20 123 4567</span>
-                <span>✉️ info@nairobi-academy.ac.ke</span>
+                <span>✉️ info@drumvale-secondary.ac.ke</span>
               </div>
               <div style="margin-top: 10px; font-style: italic;">
                 This is a computer-generated receipt and is valid without signature.
@@ -290,9 +290,9 @@ const Receipt: React.FC<ReceiptProps> = ({ data, onPrint, onClose }) => {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <GraduationCap className="h-8 w-8" />
-              <h1 className="text-2xl font-bold">Nairobi Academy</h1>
+              <h1 className="text-2xl font-bold">Drumvale Secondary School</h1>
             </div>
-            <p className="text-teal-100 text-sm">Excellence in Education</p>
+            <p className="text-teal-100 text-sm">Nurturing Tomorrow's Leaders</p>
             <h2 className="text-xl font-bold mt-4 mb-2">PAYMENT RECEIPT</h2>
             <p className="text-teal-100">Receipt #: {data.receiptNumber}</p>
           </div>
@@ -394,7 +394,7 @@ const Receipt: React.FC<ReceiptProps> = ({ data, onPrint, onClose }) => {
 
           {/* School Contact Info */}
           <div className="bg-gray-50 p-4 rounded-lg text-center text-xs text-gray-600">
-            <div className="font-semibold mb-2">Nairobi Academy - Excellence in Education</div>
+            <div className="font-semibold mb-2">Drumvale Secondary School - Nurturing Tomorrow's Leaders</div>
             <div className="flex justify-center space-x-4 text-xs">
               <span className="flex items-center">
                 <MapPin className="h-3 w-3 mr-1" />
@@ -406,7 +406,7 @@ const Receipt: React.FC<ReceiptProps> = ({ data, onPrint, onClose }) => {
               </span>
               <span className="flex items-center">
                 <Mail className="h-3 w-3 mr-1" />
-                info@nairobi-academy.ac.ke
+                info@drumvale-secondary.ac.ke
               </span>
             </div>
             <div className="mt-2 italic">

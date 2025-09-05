@@ -21,19 +21,19 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   pdf.setTextColor(255, 255, 255);
   pdf.setFontSize(12);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('NA', 16.5, 18);
+  pdf.text('DS', 16.5, 18);
   
   // School Name
   pdf.setTextColor(255, 255, 255);
   pdf.setFontSize(18);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('NAIROBI ACADEMY', 35, 18);
+  pdf.text('DRUMVALE SECONDARY SCHOOL', 35, 18);
   
   // School Details
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'normal');
   pdf.text('P.O. Box 12345-00100, Nairobi', 35, 23);
-  pdf.text('Tel: +254 20 123 4567 | Email: info@nairobi-academy.com', 35, 27);
+  pdf.text('Tel: +254 20 123 4567 | Email: info@drumvale-secondary.ac.ke', 35, 27);
   
   // Report Card Title
   pdf.setTextColor(...textColor);
@@ -273,7 +273,7 @@ export const generateReportCardPDF = (reportData: ReportCardData): void => {
   pdf.setFontSize(8);
   pdf.setFont('helvetica', 'italic');
   pdf.text('Generated on: ' + new Date().toLocaleDateString(), 20, yPos);
-  pdf.text('Nairobi Academy - Excellence in Education', 105, yPos, { align: 'center' });
+  pdf.text('Drumvale Secondary School - Nurturing Tomorrow\'s Leaders', 105, yPos, { align: 'center' });
   
   // Save the PDF
   const fileName = `${reportData.student.name.replace(/\s+/g, '_')}_${reportData.student.term}_${reportData.student.year}_ReportCard.pdf`;
@@ -292,10 +292,10 @@ export const ReportCard: React.FC<ReportCardProps> = ({ reportData }) => {
       <div className="header bg-green-600 text-white p-4 rounded-t-lg">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-            <span className="text-2xl font-bold">NA</span>
+            <span className="text-2xl font-bold">DS</span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">NAIROBI ACADEMY</h1>
+            <h1 className="text-2xl font-bold">DRUMVALE SECONDARY SCHOOL</h1>
             <p className="text-sm">P.O. Box 12345-00100, Nairobi</p>
             <p className="text-sm">Tel: +254 20 123 4567</p>
           </div>

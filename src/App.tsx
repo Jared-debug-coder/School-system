@@ -13,6 +13,15 @@ import Students from "./pages/Students";
 import Finance from "./pages/Finance";
 import Reports from "./pages/Reports";
 import ParentDashboard from "./pages/ParentDashboard";
+import StoreDashboard from "./pages/StoreDashboard";
+import LibraryManagement from "./pages/LibraryManagement";
+import LabManagement from "./pages/LabManagement";
+import HostelManagement from "./pages/HostelManagement";
+import HealthRecords from "./pages/HealthRecords";
+import DisciplineManagement from "./pages/DisciplineManagement";
+import StaffManagement from "./pages/StaffManagement";
+import ExaminationOffice from "./pages/ExaminationOffice";
+import AlumniManagement from "./pages/AlumniManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +59,24 @@ const RoleBasedRedirect = () => {
       return <Navigate to="/teacher" replace />;
     case 'parent':
       return <Navigate to="/parent" replace />;
+    case 'storekeeper':
+      return <Navigate to="/store" replace />;
+    case 'librarian':
+      return <Navigate to="/library" replace />;
+    case 'lab_technician':
+      return <Navigate to="/lab" replace />;
+    case 'nurse':
+      return <Navigate to="/health" replace />;
+    case 'hostel_warden':
+      return <Navigate to="/hostel" replace />;
+    case 'discipline_master':
+      return <Navigate to="/discipline" replace />;
+    case 'hr_manager':
+      return <Navigate to="/staff" replace />;
+    case 'exam_officer':
+      return <Navigate to="/exams" replace />;
+    case 'alumni_coordinator':
+      return <Navigate to="/alumni" replace />;
     default:
       return <Navigate to="/admin" replace />;
   }
@@ -121,6 +148,78 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['parent']}>
                     <ParentDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/store" 
+                element={
+                  <ProtectedRoute allowedRoles={['storekeeper', 'admin']}>
+                    <StoreDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/library" 
+                element={
+                  <ProtectedRoute allowedRoles={['librarian', 'admin']}>
+                    <LibraryManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/lab" 
+                element={
+                  <ProtectedRoute allowedRoles={['lab_technician', 'admin']}>
+                    <LabManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/health" 
+                element={
+                  <ProtectedRoute allowedRoles={['nurse', 'admin']}>
+                    <HealthRecords />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/hostel" 
+                element={
+                  <ProtectedRoute allowedRoles={['hostel_warden', 'admin']}>
+                    <HostelManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/discipline" 
+                element={
+                  <ProtectedRoute allowedRoles={['discipline_master', 'admin']}>
+                    <DisciplineManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/staff" 
+                element={
+                  <ProtectedRoute allowedRoles={['hr_manager', 'admin']}>
+                    <StaffManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/exams" 
+                element={
+                  <ProtectedRoute allowedRoles={['exam_officer', 'admin']}>
+                    <ExaminationOffice />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/alumni" 
+                element={
+                  <ProtectedRoute allowedRoles={['alumni_coordinator', 'admin']}>
+                    <AlumniManagement />
                   </ProtectedRoute>
                 } 
               />

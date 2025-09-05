@@ -216,9 +216,9 @@ const BalanceStatement: React.FC<BalanceStatementProps> = ({ data, onPrint, onCl
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9L5 11.18V17.18C5 17.97 5.63 18.6 6.42 18.6H17.58C18.37 18.6 19 17.97 19 17.18V11.18L23 9L12 3ZM6.5 10.47L12 7.61L17.5 10.47L12 13.33L6.5 10.47ZM18 16.7H6V12.24L12 15.54L18 12.24V16.7Z"/>
                 </svg>
-                Nairobi Academy
+                Drumvale Secondary School
               </div>
-              <div class="school-tagline">Excellence in Education</div>
+              <div class="school-tagline">Nurturing Tomorrow's Leaders</div>
               <div class="statement-title">FEE BALANCE STATEMENT</div>
               <div class="statement-number">Statement #: ${data.statementNumber}</div>
             </div>
@@ -325,11 +325,11 @@ const BalanceStatement: React.FC<BalanceStatementProps> = ({ data, onPrint, onCl
             </div>
 
             <div class="footer">
-              <div><strong>Nairobi Academy</strong> - Excellence in Education</div>
+              <div><strong>Drumvale Secondary School</strong> - Nurturing Tomorrow's Leaders</div>
               <div class="contact-info">
                 <div>📍 P.O. Box 12345, Nairobi, Kenya</div>
                 <div>📞 +254 20 123 4567 | 📱 +254 711 123 456</div>
-                <div>✉️ info@nairobi-academy.ac.ke</div>
+                <div>✉️ info@drumvale-secondary.ac.ke</div>
               </div>
               <div style="margin-top: 15px; font-style: italic;">
                 This is a computer-generated statement. For inquiries, contact the Finance Office.
@@ -360,9 +360,9 @@ const BalanceStatement: React.FC<BalanceStatementProps> = ({ data, onPrint, onCl
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-3">
               <GraduationCap className="h-10 w-10" />
-              <h1 className="text-3xl font-bold">Nairobi Academy</h1>
+              <h1 className="text-3xl font-bold">Drumvale Secondary School</h1>
             </div>
-            <p className="text-teal-100 text-lg">Excellence in Education</p>
+            <p className="text-teal-100 text-lg">Nurturing Tomorrow's Leaders</p>
             <h2 className="text-2xl font-bold mt-6 mb-3">FEE BALANCE STATEMENT</h2>
             <p className="text-teal-100 text-lg">Statement #: {data.statementNumber}</p>
           </div>
@@ -513,7 +513,7 @@ const BalanceStatement: React.FC<BalanceStatementProps> = ({ data, onPrint, onCl
 
           {/* School Contact Info */}
           <div className="bg-gray-50 p-4 rounded-lg text-center text-xs text-gray-600">
-            <div className="font-semibold mb-2">Nairobi Academy - Excellence in Education</div>
+            <div className="font-semibold mb-2">Drumvale Secondary School - Nurturing Tomorrow's Leaders</div>
             <div className="flex justify-center space-x-6 text-xs">
               <span className="flex items-center">
                 <MapPin className="h-3 w-3 mr-1" />
@@ -525,7 +525,7 @@ const BalanceStatement: React.FC<BalanceStatementProps> = ({ data, onPrint, onCl
               </span>
               <span className="flex items-center">
                 <Mail className="h-3 w-3 mr-1" />
-                info@nairobi-academy.ac.ke
+                info@drumvale-secondary.ac.ke
               </span>
             </div>
             <div className="mt-2 italic">

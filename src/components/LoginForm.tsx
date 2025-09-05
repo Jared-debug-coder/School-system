@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,18 +125,18 @@ const LoginForm = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-green-600 to-orange-600 flex items-center justify-center">
-              <span className="text-white text-lg font-bold">NA</span>
+              <span className="text-white text-lg font-bold">DS</span>
             </div>
-            <span className="text-3xl font-bold text-gray-900">Nairobi Academy</span>
+            <span className="text-3xl font-bold text-gray-900">Drumvale  School</span>
           </div>
-          <p className="text-gray-600">Excellence in Education Since 2010</p>
+          <p className="text-gray-600">Nurturing Tomorrow's Leaders Since 2010</p>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>
-              Choose your login method below
+              {/* Choose your login method below */}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -263,7 +262,7 @@ const LoginForm = () => {
                       type="text"
                       value={admissionNumber}
                       onChange={(e) => setAdmissionNumber(e.target.value)}
-                      placeholder="e.g., NA2024001"
+                      placeholder="e.g., DS2024001"
                       required
                     />
                   </div>

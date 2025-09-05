@@ -173,6 +173,44 @@ export const sendMessageToParent = (
   return newMessage;
 };
 
+export const sendMessageToTeacher = (
+  parentId: string,
+  parentName: string,
+  studentAdmissionNumber: string,
+  subject: string,
+  message: string,
+  priority: 'low' | 'medium' | 'high' | 'urgent' = 'medium'
+): Message => {
+  // Find student and teacher details
+  const student = studentsData.find(s => s.admissionNumber === studentAdmissionNumber);
+  
+  if (!student) {
+    throw new Error('Student not found');
+  }
+
+  const teacherId = `EMP_${student.classTeacher.replace(' ', '_')}`;
+  const teacherName = student.classTeacher;
+
+  const newMessage: Message = {
+    id: `MSG${Date.now()}`,
+    senderId: parentId,
+    senderName: parentName,
+    senderRole: 'parent',
+    recipientId: teacherId,
+    recipientName: teacherName,
+    recipientRole: 'teacher',
+    subject,
+    message,
+    studentAdmissionNumber,
+    priority,
+    timestamp: new Date().toISOString(),
+    read: false
+  };
+
+  messagesData.push(newMessage);
+  return newMessage;
+};
+
 export const createNotification = (
   type: 'academic' | 'disciplinary' | 'attendance' | 'fee' | 'general',
   title: string,
@@ -208,11 +246,6 @@ export const getParentContactInfo = (admissionNumber: string) => {
 
 // Quick message templates for teachers
 export const messageTemplates = {
-  academic: {
-    excellent: "Good day! I'm pleased to inform you that {studentName} has shown excellent performance in {subject}. Keep encouraging them!",
-    improvement: "{studentName} has shown improvement in {subject}. With continued effort, they can achieve even better results.",
-    concern: "I'd like to discuss {studentName}'s performance in {subject}. Please schedule a meeting at your convenience."
-  },
   attendance: {
     absent: "{studentName} was absent from school today. Please confirm their whereabouts and reason for absence.",
     late: "{studentName} has been arriving late to school frequently. Please ensure they arrive on time.",
@@ -222,5 +255,82 @@ export const messageTemplates = {
     good: "{studentName} has been exemplary in behavior and is a good role model to other students.",
     concern: "I need to discuss {studentName}'s behavior in class. Please schedule a meeting with me.",
     improvement: "{studentName} has shown positive behavioral changes. Keep encouraging them."
+  },
+  general: {
+    meeting: "Please schedule a meeting to discuss {studentName}'s progress and any concerns.",
+    homework: "{studentName} has not been completing homework assignments. Please ensure they complete their studies at home.",
+    discipline: "I need to discuss {studentName}'s classroom behavior with you. Please contact me at your earliest convenience."
   }
+};
+
+// Function to send report card availability notifications (ONLY from examination office)
+export const notifyParentOfReportCardAvailability = (
+  studentAdmissionNumber: string
+): Message => {
+  const student = studentsData.find(s => s.admissionNumber === studentAdmissionNumber);
+  if (!student) throw new Error('Student not found');
+  
+  const message = `Dear Parent, your child ${student.name}'s report card for Term 1 2024 is now available. Please log in to the parent portal to view and download the report card.`;
+  
+  return sendMessageToParent(
+    'EXM001',
+    'Examination Office',
+    studentAdmissionNumber,
+    'Report Card Available',
+    message,
+    'high'
+  );
+};
+
+// Function to send bulk report notifications (ONLY from examination office)
+export const sendBulkReportNotifications = (studentIds: string[]): { success: number; failed: number; } => {
+  let success = 0;
+  let failed = 0;
+  
+  studentIds.forEach(studentId => {
+    try {
+      const student = studentsData.find(s => s.id === studentId);
+      if (student) {
+        notifyParentOfReportCardAvailability(student.admissionNumber);
+        success++;
+      } else {
+        failed++;
+      }
+    } catch (error) {
+      failed++;
+    }
+  });
+  
+  return { success, failed };
+};
+
+// Function to get unread messages count for parent
+export const getUnreadMessagesCount = (parentId: string): number => {
+  return messagesData.filter(msg => 
+    msg.recipientId === parentId && !msg.read
+  ).length;
+};
+
+// Function to mark message as read
+export const markMessageAsRead = (messageId: string): boolean => {
+  const message = messagesData.find(msg => msg.id === messageId);
+  if (message) {
+    message.read = true;
+    return true;
+  }
+  return false;
+};
+
+// Function to simulate SMS sending
+export const sendSMS = (phoneNumber: string, message: string): boolean => {
+  // Simulate SMS sending - in real app, this would integrate with SMS provider
+  console.log(`SMS sent to ${phoneNumber}: ${message}`);
+  return true;
+};
+
+// Function to simulate email sending
+export const sendEmail = (email: string, subject: string, message: string): boolean => {
+  // Simulate email sending - in real app, this would integrate with email provider
+  console.log(`Email sent to ${email}: Subject: ${subject}, Message: ${message}`);
+  return true;
 };

@@ -211,9 +211,9 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9L5 11.18V17.18C5 17.97 5.63 18.6 6.42 18.6H17.58C18.37 18.6 19 17.97 19 17.18V11.18L23 9L12 3ZM6.5 10.47L12 7.61L17.5 10.47L12 13.33L6.5 10.47ZM18 16.7H6V12.24L12 15.54L18 12.24V16.7Z"/>
                 </svg>
-                Nairobi Academy
+                Drumvale Secondary School
               </div>
-              <div class="school-tagline">Excellence in Education</div>
+              <div class="school-tagline">Nurturing Tomorrow's Leaders</div>
               <div class="invoice-title">SCHOOL FEE INVOICE</div>
               <div class="invoice-number">Invoice #: ${data.invoiceNumber}</div>
             </div>
@@ -310,14 +310,14 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
                   </div>
                   <div>
                     <strong>Bank Transfer:</strong> KCB Bank<br>
-                    A/C: 1234567890 (Nairobi Academy)
+                    A/C: 1234567890 (Drumvale Secondary School)
                   </div>
                   <div>
                     <strong>Cash/Cheque:</strong> School Finance Office<br>
                     Mon-Fri: 8:00 AM - 4:00 PM
                   </div>
                   <div>
-                    <strong>Online Portal:</strong> www.nairobi-academy.ac.ke<br>
+                    <strong>Online Portal:</strong> www.drumvale-secondary.ac.ke<br>
                     Login with admission number
                   </div>
                 </div>
@@ -325,11 +325,11 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
             </div>
 
             <div class="footer">
-              <div><strong>Nairobi Academy</strong> - Excellence in Education</div>
+              <div><strong>Drumvale Secondary School</strong> - Nurturing Tomorrow's Leaders</div>
               <div class="contact-info">
                 <div>📍 P.O. Box 12345, Nairobi, Kenya</div>
                 <div>📞 +254 20 123 4567 | 📱 +254 711 123 456</div>
-                <div>✉️ info@nairobi-academy.ac.ke</div>
+                <div>✉️ info@drumvale-secondary.ac.ke</div>
               </div>
               <div style="margin-top: 15px; font-style: italic;">
                 This is a computer-generated invoice. For inquiries, contact the Finance Office.
@@ -360,9 +360,9 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-3">
               <GraduationCap className="h-10 w-10" />
-              <h1 className="text-3xl font-bold">Nairobi Academy</h1>
+              <h1 className="text-3xl font-bold">Drumvale Secondary School</h1>
             </div>
-            <p className="text-teal-100 text-lg">Excellence in Education</p>
+            <p className="text-teal-100 text-lg">Nurturing Tomorrow's Leaders</p>
             <h2 className="text-2xl font-bold mt-6 mb-3">SCHOOL FEE INVOICE</h2>
             <p className="text-teal-100 text-lg">Invoice #: {data.invoiceNumber}</p>
           </div>
@@ -490,7 +490,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
                 </div>
                 <div>
                   <span className="font-medium text-blue-800">Bank Transfer:</span>
-                  <br />KCB Bank, A/C: 1234567890 (Nairobi Academy)
+                  <br />KCB Bank, A/C: 1234567890 (Drumvale Secondary School)
                 </div>
               </div>
               <div className="space-y-2">
@@ -500,7 +500,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
                 </div>
                 <div>
                   <span className="font-medium text-blue-800">Online Portal:</span>
-                  <br />www.nairobi-academy.ac.ke
+                  <br />www.drumvale-secondary.ac.ke
                 </div>
               </div>
             </div>
@@ -508,7 +508,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
 
           {/* School Contact Info */}
           <div className="bg-gray-50 p-4 rounded-lg text-center text-xs text-gray-600">
-            <div className="font-semibold mb-2">Nairobi Academy - Excellence in Education</div>
+            <div className="font-semibold mb-2">Drumvale Secondary School - Nurturing Tomorrow's Leaders</div>
             <div className="flex justify-center space-x-6 text-xs">
               <span className="flex items-center">
                 <MapPin className="h-3 w-3 mr-1" />
@@ -520,7 +520,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data, onPrint, onClose }) => {
               </span>
               <span className="flex items-center">
                 <Mail className="h-3 w-3 mr-1" />
-                info@nairobi-academy.ac.ke
+                info@drumvale-secondary.ac.ke
               </span>
             </div>
             <div className="mt-2 italic">
